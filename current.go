@@ -35,6 +35,7 @@ type Current struct {
 	grayStroke float64
 
 	lineWidth float64
+	charWidth float64
 
 	//current page size
 	pageSize Rect
