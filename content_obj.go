@@ -103,6 +103,7 @@ func (c *ContentObj) AppendStreamText(text string) error {
 		contentType:    ContentTypeText,
 		lineWidth:      c.getRoot().curr.lineWidth,
 		txtColorMode:   c.getRoot().curr.txtColorMode,
+		charWidth:      c.getRoot().curr.charWidth,
 	}
 
 	var err error
@@ -143,6 +144,7 @@ func (c *ContentObj) AppendStreamSubsetFont(rectangle *Rect, text string, cellOp
 		cellOpt:        cellOpt,
 		lineWidth:      c.getRoot().curr.lineWidth,
 		txtColorMode:   c.getRoot().curr.txtColorMode,
+		charWidth:      c.getRoot().curr.charWidth,
 	}
 	var err error
 	c.getRoot().curr.X, c.getRoot().curr.Y, err = c.listCache.appendContentText(cache, text)
@@ -236,7 +238,6 @@ func (c *ContentObj) AppendStreamSetLineType(t string) {
 	var cache cacheContentLineType
 	cache.lineType = t
 	c.listCache.append(&cache)
-
 }
 
 //AppendStreamSetGrayFill  set the grayscale fills

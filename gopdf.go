@@ -73,6 +73,11 @@ func (gp *GoPdf) SetLineWidth(width float64) {
 	gp.getContent().AppendStreamSetLineWidth(gp.UnitsToPoints(width))
 }
 
+//SetCharWidth : set char width
+func (gp *GoPdf) SetCharWidth(width float64) {
+	gp.curr.charWidth = width
+}
+
 //SetCompressLevel : set compress Level for content streams
 // Possible values for level:
 //    -2 HuffmanOnly, -1 DefaultCompression (which is level 6)
@@ -493,6 +498,22 @@ func (gp *GoPdf) Text(text string) error {
 	}
 
 	err = gp.getContent().AppendStreamText(text)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//Char write text start at current x,y ( current y is the baseline of text )
+func (gp *GoPdf) Chars(width float64, text string) error {
+
+	err := gp.curr.Font_ISubset.AddChars(text)
+	if err != nil {
+		return err
+	}
+
+	err = gp.getContent().AppendStreamChars(width, text)
 	if err != nil {
 		return err
 	}

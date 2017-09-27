@@ -28,6 +28,7 @@ type cacheContentText struct {
 	contentType    int
 	cellOpt        CellOption
 	lineWidth      float64
+	charWidth      float64
 	text           string
 	//---result---
 	cellWidthPdfUnit, textWidthPdfUnit float64
@@ -45,6 +46,7 @@ func (c *cacheContentText) isSame(cache cacheContentText) bool {
 		c.fontSize == cache.fontSize &&
 		c.fontStyle == cache.fontStyle &&
 		c.setXCount == cache.setXCount &&
+		c.charWidth == cache.charWidth &&
 		c.y == cache.y {
 		return true
 	}
@@ -150,6 +152,12 @@ func (c *cacheContentText) write(w io.Writer, protection *PDFProtection) error {
 			}
 		}
 
+		if c.charWidth > 0 {
+			width, _ := c.fontSubset.CharWidth(r)
+			cw := float64(width) * float64(c.fontSize) / 1000
+			xw := int((cw - c.charWidth) / (float64(c.fontSize) / 1000))
+			fmt.Fprintf(w, ">%d<", xw)
+		}
 		fmt.Fprintf(w, "%04X", glyphindex)
 		leftRune = r
 		leftRuneIndex = glyphindex
@@ -338,6 +346,7 @@ func (c *CacheContent) Setup(rectangle *Rect,
 	contentType int,
 	cellOpt CellOption,
 	lineWidth float64,
+	charWidth float64,
 ) {
 	c.cacheContentText = cacheContentText{
 		fontSubset:     fontSubset,
@@ -354,6 +363,7 @@ func (c *CacheContent) Setup(rectangle *Rect,
 		contentType:    ContentTypeCell,
 		cellOpt:        cellOpt,
 		lineWidth:      lineWidth,
+		charWidth:      charWidth,
 	}
 }
 
